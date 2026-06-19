@@ -508,6 +508,20 @@ code {
   .chip {
     flex-shrink: 0;
   }
+
+  /* Segmenté + « Copier en » sur une seule ligne : le select absorbe la place. */
+  .filters-secondary {
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+  }
+  .segmented button {
+    padding: 0.35rem 0.6rem;
+  }
+  .copy-format,
+  .copy-format-select {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
