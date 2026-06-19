@@ -50,7 +50,7 @@ jobs:
           path: public
       - name: Déploiement Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       # Auto-merge — sauf montée de version MAJEURE, qu'on garde pour revue
       # manuelle (changements potentiellement cassants côté DSFR).
