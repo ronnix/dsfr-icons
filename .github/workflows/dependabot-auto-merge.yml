@@ -1,37 +1,28 @@
-name: Dependabot — build, déploiement & auto-merge
+name: Dependabot — build & auto-merge
 
-# Sur chaque PR ouverte par Dependabot : on build (garde-fou), on déploie la
-# nouvelle version sur Pages, puis on merge. Tout est fait dans le même job car
-# un merge réalisé par le GITHUB_TOKEN ne redéclenche pas deploy.yml (anti-boucle
-# GitHub) : déployer ici garantit la mise en ligne, sans PAT.
+# Sur chaque PR Dependabot : on build (garde-fou : pas de merge si ça casse), on
+# merge, puis on déclenche le déploiement sur main. On ne déploie PAS depuis la PR
+# (l'environnement github-pages restreint les déploiements à main) ; on utilise
+# workflow_dispatch, seul événement que le GITHUB_TOKEN est autorisé à déclencher
+# malgré l'anti-boucle GitHub.
 
 on: pull_request
 
 permissions:
   contents: write
   pull-requests: write
-  pages: write
-  id-token: write
-
-# Sérialise avec deploy.yml (même groupe) pour éviter deux déploiements Pages
-# concurrents.
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  actions: write # pour déclencher deploy.yml après le merge
 
 jobs:
-  build-deploy-merge:
+  build-merge:
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Métadonnées Dependabot
         id: meta
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -41,22 +32,15 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - name: Build (valide la nouvelle version)
+      - name: Build (valide la mise à jour)
         run: npm run build
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
-      - name: Déploiement Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      # Auto-merge — sauf montée de version MAJEURE, qu'on garde pour revue
-      # manuelle (changements potentiellement cassants côté DSFR).
-      - name: Merge de la PR
+      # Auto-merge — sauf montée de version MAJEURE, gardée pour revue manuelle.
+      - name: Merge + redéploiement
         if: ${{ steps.meta.outputs.update-type != 'version-update:semver-major' }}
-        run: gh pr merge --squash --delete-branch "$PR_URL"
+        run: |
+          gh pr merge --squash --delete-branch "$PR_URL"
+          gh workflow run deploy.yml --ref main
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
