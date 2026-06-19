@@ -30,9 +30,12 @@
   --border: #ddd;
   --border-strong: #929292;
   --accent: var(--blue);
+  --artwork-decorative: #ececff;
+  --artwork-minor: var(--red);
+  --artwork-major: var(--blue);
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   --radius: 8px;
-  --header-h: auto;
+  --header-h: 0px;
 }
 
 [data-theme="dark"] {
@@ -47,17 +50,19 @@
   --border: #444;
   --border-strong: #777;
   --accent: var(--blue-light);
+  /* Approximation du rendu sombre DSFR des pictogrammes (calques). */
+  --artwork-decorative: #3d3d52;
+  --artwork-minor: #f95c5e;
+  --artwork-major: #8585f6;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 * {
   box-sizing: border-box;
 }
-
 html {
   scroll-behavior: smooth;
 }
-
 body {
   margin: 0;
   font-family: "Marianne", system-ui, -apple-system, sans-serif;
@@ -66,11 +71,9 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-
 a {
   color: var(--accent);
 }
-
 code {
   font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   font-size: 0.9em;
@@ -92,25 +95,22 @@ code {
   border-radius: var(--radius);
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header + onglets ---------- */
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   background: var(--surface);
-  border-bottom: 3px solid var(--accent);
-  padding: 1rem clamp(1rem, 3vw, 2rem) 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding: 1rem clamp(1rem, 3vw, 2rem) 0;
   box-shadow: var(--shadow);
 }
-
 .header-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-  flex-wrap: wrap;
 }
-
 .brand {
   display: flex;
   align-items: center;
@@ -123,24 +123,13 @@ code {
 }
 .brand h1 {
   margin: 0;
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 .subtitle {
   margin: 0.1rem 0 0;
   font-size: 0.85rem;
   color: var(--text-soft);
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.meta {
-  font-size: 0.8rem;
-  color: var(--text-soft);
-  white-space: nowrap;
 }
 
 .icon-btn {
@@ -153,20 +142,67 @@ code {
   cursor: pointer;
   display: grid;
   place-items: center;
-  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 .icon-btn:hover {
   border-color: var(--accent);
 }
 
-/* ---------- Search ---------- */
-.search-row {
+.tabs {
+  display: flex;
+  gap: 0.25rem;
   margin-top: 0.9rem;
+}
+.tab {
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.tab:hover {
+  color: var(--text);
+}
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab-count {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  background: var(--surface-alt);
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+.tab.active .tab-count {
+  color: var(--accent);
+}
+
+/* ---------- Toolbar (collante sous le header) ---------- */
+.toolbar {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 10;
+  background: var(--bg);
+  padding: 1rem clamp(1rem, 3vw, 2rem) 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 .search-box {
   position: relative;
   display: flex;
   align-items: center;
+  flex: 1;
   max-width: 640px;
 }
 .search-icon {
@@ -177,20 +213,19 @@ code {
   fill: var(--text-soft);
   pointer-events: none;
 }
-#search {
+.search {
   width: 100%;
-  padding: 0.7rem 2.5rem 0.7rem 2.5rem;
+  padding: 0.7rem 2.5rem;
   font: inherit;
   font-size: 1rem;
   color: var(--text);
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
 }
-#search:focus {
+.search:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
-  background: var(--surface);
 }
 .clear-btn {
   position: absolute;
@@ -205,8 +240,13 @@ code {
   font-size: 1.2rem;
   line-height: 1;
 }
+.count {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
 
-/* ---------- Filters ---------- */
 .filters {
   margin-top: 0.9rem;
 }
@@ -234,7 +274,7 @@ code {
   border-color: var(--accent);
   color: #fff;
 }
-.chip .chip-count {
+.chip-count {
   opacity: 0.65;
   margin-left: 0.3rem;
   font-variant-numeric: tabular-nums;
@@ -247,7 +287,6 @@ code {
   align-items: center;
   margin-top: 0.75rem;
 }
-
 .segmented {
   display: inline-flex;
   border: 1px solid var(--border-strong);
@@ -270,7 +309,6 @@ code {
   background: var(--accent);
   color: #fff;
 }
-
 .copy-format {
   display: inline-flex;
   align-items: center;
@@ -278,7 +316,7 @@ code {
   font-size: 0.82rem;
   color: var(--text-soft);
 }
-.copy-format select {
+.copy-format-select {
   font: inherit;
   font-size: 0.82rem;
   padding: 0.3rem 0.5rem;
@@ -288,22 +326,21 @@ code {
   color: var(--text);
 }
 
-/* ---------- Grid ---------- */
-main {
-  padding: 1.25rem clamp(1rem, 3vw, 2rem) 3rem;
-}
+/* ---------- Grilles ---------- */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
   gap: 0.6rem;
+  padding: 1.25rem clamp(1rem, 3vw, 2rem);
+}
+.grid-pictos {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.9rem;
 }
 
-/* `.card { display:flex }` l'emporterait sur la règle UA [hidden]{display:none} :
-   on rétablit explicitement le masquage des cartes filtrées. */
 .card[hidden] {
   display: none;
 }
-
 .card {
   display: flex;
   flex-direction: column;
@@ -330,11 +367,11 @@ main {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.card svg {
+.card > svg {
   width: 32px;
   height: 32px;
-  /* currentColor uniquement sur <svg> : les path sans fill héritent, les logos
-     avec fill propre (ex. #000091) sont préservés. */
+  /* Les fills sont retirés au build : les path héritent de currentColor → rendu
+     monochrome uniforme (comme l'usage en mask-image du DSFR), adapté au thème. */
   fill: currentColor;
   flex-shrink: 0;
 }
@@ -345,6 +382,31 @@ main {
   word-break: break-word;
   font-family: ui-monospace, Menlo, Consolas, monospace;
 }
+
+/* Cartes pictogrammes : plus grandes, en couleur */
+.card-picto {
+  padding: 1.4rem 0.7rem 0.85rem;
+  gap: 0.75rem;
+}
+.card-picto > svg {
+  width: 112px;
+  height: 112px;
+  fill: none; /* les couleurs viennent des calques fr-artwork-* */
+}
+/* Couleurs des calques (pilotées par variables → adaptation thème sombre) */
+.card-picto .fr-artwork-decorative {
+  fill: var(--artwork-decorative);
+}
+.card-picto .fr-artwork-minor {
+  fill: var(--artwork-minor);
+}
+.card-picto .fr-artwork-major {
+  fill: var(--artwork-major);
+}
+.card-picto .name {
+  font-size: 0.78rem;
+}
+
 .card.copied {
   border-color: var(--red);
 }
@@ -361,7 +423,8 @@ main {
   border-radius: var(--radius);
 }
 
-.empty {
+.empty,
+.loading {
   text-align: center;
   color: var(--text-soft);
   padding: 3rem 1rem;

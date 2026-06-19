@@ -1,34 +1,49 @@
-# Icônes DSFR
+# Icônes & pictogrammes DSFR
 
-Explorateur visuel des icônes du [Système de Design de l'État (DSFR)](https://www.systeme-de-design.gouv.fr/).
-Recherchez, filtrez par catégorie/style, et copiez l'identifiant `fr-icon-*` (ou le nom, le HTML, le SVG) en un clic.
+Explorateur visuel des **icônes** et **pictogrammes** du [Système de Design de l'État (DSFR)](https://www.systeme-de-design.gouv.fr/).
+Recherchez, filtrez, et copiez l'identifiant `fr-icon-*` (ou le nom, le HTML, le SVG) en un clic.
 
-Pensé pour combler le manque de la [page officielle des icônes](https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/icone),
-peu pratique pour choisir une icône visuellement et récupérer son identifiant.
+Pensé pour combler le manque des pages officielles
+([icônes](https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/icone),
+[pictogrammes](https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/pictogramme)),
+peu pratiques pour choisir un visuel et récupérer son identifiant.
 
 ## Fonctionnalités
 
+- Deux onglets : **1036 icônes** et **102 pictogrammes**
 - Recherche instantanée (nom + mots-clés, tokens combinés)
-- Filtre par catégorie (18) et par style (Ligne / Plein)
-- Copie au format **classe `fr-icon-*`**, **nom**, **HTML `<span>`** ou **SVG inline**
+- Filtre par catégorie (18 / 10) et, pour les icônes, par style (Ligne / Plein)
+- Copie adaptée à chaque type :
+  - icônes → **classe `fr-icon-*`**, **nom**, **HTML `<span>`** ou **SVG inline**
+  - pictogrammes → **SVG inline**, **nom de fichier** ou **markup DSFR `<use>`**
+- Rendu fidèle : icônes monochromes (comme l'usage `mask-image` du DSFR),
+  pictogrammes multicolores avec adaptation au thème sombre
 - Thème clair/sombre (suit l'OS, mémorisé)
-- État partageable dans l'URL (`#q=...&cat=...&v=...`)
+- État partageable dans l'URL (`#t=...&q=...&cat=...&v=...`)
 - Raccourcis : `/` pour chercher, `Échap` pour effacer
 
 ## Architecture
 
 Site **100 % statique, zéro dépendance runtime**. Le seul paquet (`@gouvfr/dsfr`,
-en `devDependency`) sert de **source de vérité** : `build.mjs` scanne ses 1036 SVG,
-en extrait l'identifiant et le markup, et génère `public/`.
+en `devDependency`) sert de **source de vérité** : `build.mjs` scanne ses SVG
+(icônes + pictogrammes), en extrait identifiants et markup, et génère `public/`.
 
 ```
 build.mjs        scanne node_modules/@gouvfr/dsfr → public/
 src/             index.html · style.css · app.js (sources éditables)
 public/          sortie générée (gitignorée) — c'est ce qui est déployé
+  manifest.js          compteurs (toujours chargé)
+  icons-data.js        1036 icônes (chargé d'emblée)
+  pictograms-data.js   102 pictogrammes (chargé à la demande, à l'ouverture de l'onglet)
 ```
 
-Les données sont émises en `icons-data.js` (et non un `.json` à `fetch`) pour que
+Les données sont émises en `*.js` (et non un `.json` à `fetch`) pour que
 `public/index.html` s'ouvre aussi **directement en local** (`file://`), sans serveur.
+
+Deux traitements au build : les `fill` des icônes sont retirés (rendu monochrome
+uniforme en `currentColor`) ; les IDs internes des pictogrammes
+(`artwork-decorative/minor/major`) sont préfixés par picto pour éviter toute
+collision quand ils sont inlinés ensemble dans la même page.
 
 ## Développement
 
@@ -39,7 +54,7 @@ npm run serve      # sert public/ sur http://localhost:3000
 # ou simplement : ouvrir public/index.html dans un navigateur
 ```
 
-## Mettre à jour les icônes
+## Mettre à jour les icônes & pictogrammes
 
 Quand une nouvelle version du DSFR sort :
 

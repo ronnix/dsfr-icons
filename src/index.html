@@ -3,104 +3,159 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Icônes DSFR — recherche & copie d'identifiant</title>
+    <title>Icônes & pictogrammes DSFR — recherche & copie</title>
     <meta
       name="description"
-      content="Explorateur visuel des icônes du Système de Design de l'État (DSFR) : rechercher, filtrer par catégorie, et copier l'identifiant fr-icon-* en un clic."
+      content="Explorateur visuel des icônes et pictogrammes du Système de Design de l'État (DSFR) : rechercher, filtrer, et copier l'identifiant ou le SVG en un clic."
     />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <a class="skip-link" href="#grid">Aller à la grille d'icônes</a>
+    <a class="skip-link" href="#main">Aller au contenu</a>
 
     <header class="site-header">
       <div class="header-row">
         <div class="brand">
           <span class="brand-mark" aria-hidden="true">◆</span>
           <div>
-            <h1>Icônes DSFR</h1>
+            <h1>Icônes &amp; pictogrammes DSFR</h1>
             <p class="subtitle">
-              Cherchez une icône, copiez son identifiant
-              <code>fr-icon-*</code>.
+              Cherchez, puis copiez l'identifiant ou le SVG en un clic.
             </p>
           </div>
         </div>
-        <div class="header-actions">
-          <span class="meta" id="meta-info" aria-live="polite"></span>
-          <button
-            type="button"
-            id="theme-toggle"
-            class="icon-btn"
-            aria-label="Basculer le thème clair/sombre"
-            title="Thème clair/sombre"
-          ></button>
-        </div>
+        <button
+          type="button"
+          id="theme-toggle"
+          class="icon-btn"
+          aria-label="Basculer le thème clair/sombre"
+          title="Thème clair/sombre"
+        ></button>
       </div>
 
-      <div class="search-row">
-        <div class="search-box">
-          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M11 2a9 9 0 0 1 7.032 14.617l4.675 4.676-1.414 1.414-4.676-4.675A9 9 0 1 1 11 2Zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z"
-            />
-          </svg>
-          <input
-            type="search"
-            id="search"
-            placeholder="Rechercher (nom, mot-clé)…  appuyez sur /"
-            autocomplete="off"
-            autocapitalize="off"
-            spellcheck="false"
-            aria-label="Rechercher une icône"
-          />
-          <button
-            type="button"
-            id="clear-search"
-            class="clear-btn"
-            aria-label="Effacer la recherche"
-            hidden
-          >
-            ×
-          </button>
-        </div>
-      </div>
-
-      <div class="filters">
-        <div
-          class="chip-group"
-          id="category-filters"
-          role="group"
-          aria-label="Filtrer par catégorie"
-        ></div>
-        <div class="filters-secondary">
-          <div
-            class="segmented"
-            id="variant-filter"
-            role="group"
-            aria-label="Filtrer par style"
-          >
-            <button type="button" data-variant="all" class="active">Tous styles</button>
-            <button type="button" data-variant="line">Ligne</button>
-            <button type="button" data-variant="fill">Plein</button>
-          </div>
-          <label class="copy-format">
-            <span>Copier en :</span>
-            <select id="copy-format" aria-label="Format de copie">
-              <option value="class">Classe fr-icon-*</option>
-              <option value="name">Nom de l'icône</option>
-              <option value="html">HTML &lt;span&gt;</option>
-              <option value="svg">SVG inline</option>
-            </select>
-          </label>
-        </div>
-      </div>
+      <nav class="tabs" role="tablist" aria-label="Type d'élément">
+        <button
+          type="button"
+          class="tab active"
+          id="tabbtn-icons"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-icons"
+          data-tab="icons"
+        >
+          Icônes <span class="tab-count" data-count="icons">…</span>
+        </button>
+        <button
+          type="button"
+          class="tab"
+          id="tabbtn-pictos"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-pictos"
+          data-tab="pictos"
+        >
+          Pictogrammes <span class="tab-count" data-count="pictos">…</span>
+        </button>
+      </nav>
     </header>
 
-    <main>
-      <div id="grid" class="grid" aria-label="Grille d'icônes"></div>
-      <p id="empty" class="empty" hidden>
-        Aucune icône ne correspond à votre recherche.
-      </p>
+    <main id="main">
+      <!-- ===================== Onglet Icônes ===================== -->
+      <section
+        class="panel"
+        id="panel-icons"
+        role="tabpanel"
+        aria-labelledby="tabbtn-icons"
+        data-kind="icons"
+      >
+        <div class="toolbar">
+          <div class="search-row">
+            <div class="search-box">
+              <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M11 2a9 9 0 0 1 7.032 14.617l4.675 4.676-1.414 1.414-4.676-4.675A9 9 0 1 1 11 2Zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z"
+                />
+              </svg>
+              <input
+                type="search"
+                class="search"
+                placeholder="Rechercher une icône…  appuyez sur /"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-label="Rechercher une icône"
+              />
+              <button type="button" class="clear-btn" aria-label="Effacer" hidden>
+                ×
+              </button>
+            </div>
+            <span class="count" aria-live="polite"></span>
+          </div>
+          <div class="filters">
+            <div class="chip-group cat-group" role="group" aria-label="Catégorie"></div>
+            <div class="filters-secondary">
+              <div class="segmented variant-filter" role="group" aria-label="Style">
+                <button type="button" data-variant="all" class="active">Tous styles</button>
+                <button type="button" data-variant="line">Ligne</button>
+                <button type="button" data-variant="fill">Plein</button>
+              </div>
+              <label class="copy-format">
+                <span>Copier en :</span>
+                <select class="copy-format-select" aria-label="Format de copie"></select>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="grid"></div>
+        <p class="empty" hidden>Aucune icône ne correspond à votre recherche.</p>
+      </section>
+
+      <!-- =================== Onglet Pictogrammes =================== -->
+      <section
+        class="panel"
+        id="panel-pictos"
+        role="tabpanel"
+        aria-labelledby="tabbtn-pictos"
+        data-kind="pictos"
+        hidden
+      >
+        <div class="toolbar">
+          <div class="search-row">
+            <div class="search-box">
+              <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M11 2a9 9 0 0 1 7.032 14.617l4.675 4.676-1.414 1.414-4.676-4.675A9 9 0 1 1 11 2Zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z"
+                />
+              </svg>
+              <input
+                type="search"
+                class="search"
+                placeholder="Rechercher un pictogramme…  appuyez sur /"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-label="Rechercher un pictogramme"
+              />
+              <button type="button" class="clear-btn" aria-label="Effacer" hidden>
+                ×
+              </button>
+            </div>
+            <span class="count" aria-live="polite"></span>
+          </div>
+          <div class="filters">
+            <div class="chip-group cat-group" role="group" aria-label="Catégorie"></div>
+            <div class="filters-secondary">
+              <label class="copy-format">
+                <span>Copier en :</span>
+                <select class="copy-format-select" aria-label="Format de copie"></select>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-pictos"></div>
+        <p class="empty" hidden>Aucun pictogramme ne correspond à votre recherche.</p>
+        <p class="loading" hidden>Chargement des pictogrammes…</p>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -110,7 +165,14 @@
           href="https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/icone"
           target="_blank"
           rel="noopener"
-          >Documentation officielle des icônes</a
+          >Icônes</a
+        >
+        ·
+        <a
+          href="https://www.systeme-de-design.gouv.fr/version-courante/fr/fondamentaux/pictogramme"
+          target="_blank"
+          rel="noopener"
+          >Pictogrammes</a
         >
       </p>
     </footer>
@@ -123,6 +185,7 @@
       </p>
     </noscript>
 
+    <script src="./manifest.js"></script>
     <script src="./icons-data.js"></script>
     <script src="./app.js" defer></script>
   </body>

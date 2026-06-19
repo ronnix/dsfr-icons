@@ -2,7 +2,7 @@
   "name": "dsfr-icons",
   "version": "0.1.0",
   "private": true,
-  "description": "Explorateur visuel des icônes du Système de Design de l'État (DSFR) : rechercher, filtrer et copier l'identifiant fr-icon-*.",
+  "description": "Explorateur visuel des icônes et pictogrammes du Système de Design de l'État (DSFR) : rechercher, filtrer et copier l'identifiant ou le SVG.",
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
