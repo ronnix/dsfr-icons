@@ -166,6 +166,11 @@ code {
 .icon-btn:hover {
   border-color: var(--accent);
 }
+/* Les <path> des icônes (lune/soleil) n'ont pas de fill → noir par défaut, donc
+   illisible en thème sombre. On les fait suivre la couleur du bouton. */
+.icon-btn svg {
+  fill: currentColor;
+}
 
 .tabs {
   display: flex;
