@@ -62,6 +62,10 @@
 }
 html {
   scroll-behavior: smooth;
+  /* Réserve en permanence la gouttière de scrollbar : pas de décalage horizontal
+     quand le contenu passe sous la hauteur de viewport (ex. filtre à 0 élément).
+     Sans effet sur les scrollbars overlay (macOS), qui ne prennent pas de place. */
+  scrollbar-gutter: stable;
 }
 body {
   margin: 0;
