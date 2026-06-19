@@ -526,6 +526,20 @@ code {
     flex: 1;
     min-width: 0;
   }
+
+  /* Pictos : 2 par ligne plutôt qu'une seule carte géante (le minmax(200px) ne
+     laissait tenir qu'une colonne). On réduit picto et marges en conséquence. */
+  .grid-pictos {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .card-picto {
+    padding: 1.1rem 0.5rem 0.7rem;
+  }
+  .card-picto > svg {
+    width: 96px;
+    height: 96px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
