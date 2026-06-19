@@ -5,6 +5,12 @@
   var MANIFEST = window.DSFR_MANIFEST || { version: "?", counts: {} };
 
   // ---------------- Helpers ----------------
+  // Nombres formatés selon la locale française (séparateur de milliers : 1 036).
+  var NF = new Intl.NumberFormat("fr-FR");
+  function fmt(n) {
+    return NF.format(n);
+  }
+
   function escapeHtml(s) {
     return String(s)
       .replace(/&/g, "&amp;")
@@ -259,7 +265,7 @@
       b.className = "chip";
       b.dataset.cat = id;
       b.innerHTML =
-        escapeHtml(label) + ' <span class="chip-count">' + count + "</span>";
+        escapeHtml(label) + ' <span class="chip-count">' + fmt(count) + "</span>";
       b.addEventListener("click", function () {
         setCat(id);
         if (onChange) onChange();
@@ -338,7 +344,7 @@
       }
       emptyMsg.hidden = visible !== 0;
       countEl.textContent =
-        (visible === total ? total : visible + " / " + total) +
+        (visible === total ? fmt(total) : fmt(visible) + " / " + fmt(total)) +
         " " +
         cfg.nounPlural;
     }
@@ -405,7 +411,7 @@
   // compteurs d'onglets + version
   document.querySelectorAll(".tab-count").forEach(function (el) {
     var c = MANIFEST.counts[el.dataset.count];
-    if (c != null) el.textContent = c;
+    if (c != null) el.textContent = fmt(c);
   });
   var verEl = document.getElementById("dsfr-version");
   if (verEl) verEl.textContent = "@gouvfr/dsfr@" + MANIFEST.version;
