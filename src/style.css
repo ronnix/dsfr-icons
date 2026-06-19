@@ -122,8 +122,8 @@ code {
   flex-shrink: 0;
 }
 .brand-mark svg {
-  width: 46px;
-  height: 46px;
+  width: 56px;
+  height: 56px;
   fill: none; /* couleurs portées par les calques fr-artwork-* */
 }
 /* Mêmes variables que les cartes pictos → adaptation au thème sombre. */
@@ -483,6 +483,31 @@ code {
 .toast code {
   background: rgba(255, 255, 255, 0.15);
   color: inherit;
+}
+
+/* Mobile : les pastilles de catégorie passent en une rangée défilable au lieu de
+   wrapper sur ~8 lignes et de manger tout l'écran. La dernière pastille coupée au
+   bord indique qu'on peut faire défiler. */
+@media (max-width: 640px) {
+  .chip-group {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    padding-bottom: 2px;
+    /* dégradé de bord pour suggérer le défilement horizontal */
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 calc(100% - 24px),
+      transparent
+    );
+    mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent);
+  }
+  .chip-group::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  .chip {
+    flex-shrink: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
