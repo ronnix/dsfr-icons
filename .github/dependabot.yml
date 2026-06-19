@@ -1,0 +1,18 @@
+version: 2
+updates:
+  # Source de vérité des icônes/pictos : on suit les versions de @gouvfr/dsfr
+  # (seule dépendance du projet). Une PR est ouverte dès qu'une nouvelle sort.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: deps
+
+  # Garde les actions du workflow Pages à jour (actions/checkout, setup-node…).
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci

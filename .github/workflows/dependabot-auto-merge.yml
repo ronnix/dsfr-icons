@@ -1,0 +1,62 @@
+name: Dependabot — build, déploiement & auto-merge
+
+# Sur chaque PR ouverte par Dependabot : on build (garde-fou), on déploie la
+# nouvelle version sur Pages, puis on merge. Tout est fait dans le même job car
+# un merge réalisé par le GITHUB_TOKEN ne redéclenche pas deploy.yml (anti-boucle
+# GitHub) : déployer ici garantit la mise en ligne, sans PAT.
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+  pages: write
+  id-token: write
+
+# Sérialise avec deploy.yml (même groupe) pour éviter deux déploiements Pages
+# concurrents.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-deploy-merge:
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Métadonnées Dependabot
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - name: Build (valide la nouvelle version)
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - name: Déploiement Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # Auto-merge — sauf montée de version MAJEURE, qu'on garde pour revue
+      # manuelle (changements potentiellement cassants côté DSFR).
+      - name: Merge de la PR
+        if: ${{ steps.meta.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr merge --squash --delete-branch "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

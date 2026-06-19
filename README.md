@@ -56,7 +56,15 @@ npm run serve      # sert public/ sur http://localhost:3000
 
 ## Mettre à jour les icônes & pictogrammes
 
-Quand une nouvelle version du DSFR sort :
+**Automatique.** Dependabot (`.github/dependabot.yml`) ouvre une PR dès qu'une
+nouvelle version de `@gouvfr/dsfr` sort. Le workflow
+`.github/workflows/dependabot-auto-merge.yml` la prend en charge : il **build**
+(garde-fou), **déploie** la nouvelle version sur Pages, puis **merge** la PR — sans
+intervention. Exception : une montée de version **majeure** n'est pas auto-mergée
+(la PR reste ouverte pour revue, car le DSFR peut introduire des changements
+cassants).
+
+**Manuellement** (test local, ou pour forcer une mise à jour) :
 
 ```bash
 npm install @gouvfr/dsfr@latest
