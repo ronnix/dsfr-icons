@@ -2,6 +2,7 @@
 // Aucune dépendance runtime — uniquement les modules Node natifs.
 import { readFile, writeFile, readdir, mkdir, copyFile, rm } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -179,15 +180,35 @@ async function main() {
     ),
     "brand",
   );
-  const html = (await readFile(join(SRC, "index.html"), "utf8")).replace(
-    "<!--BRAND-->",
-    brandSvg,
+  // Cache-busting : on suffixe chaque asset d'un ?v=<hash de contenu>. L'URL ne
+  // change que si le fichier change → les navigateurs très collants (Safari iOS)
+  // re-téléchargent à chaque déploiement, sans buster les fichiers inchangés.
+  const ver = async (file) =>
+    createHash("sha256")
+      .update(await readFile(join(OUT, file)))
+      .digest("hex")
+      .slice(0, 8);
+
+  // app.js charge pictograms-data.js dynamiquement → on versionne cette
+  // référence interne avant de calculer le hash d'app.js lui-même.
+  const appJs = (await readFile(join(SRC, "app.js"), "utf8")).replace(
+    '"./pictograms-data.js"',
+    `"./pictograms-data.js?v=${await ver("pictograms-data.js")}"`,
   );
+  await writeFile(join(OUT, "app.js"), appJs, "utf8");
+  await copyFile(join(SRC, "style.css"), join(OUT, "style.css"));
+
+  const html = (await readFile(join(SRC, "index.html"), "utf8"))
+    .replace("<!--BRAND-->", brandSvg)
+    .replace('href="./style.css"', `href="./style.css?v=${await ver("style.css")}"`)
+    .replace('src="./manifest.js"', `src="./manifest.js?v=${await ver("manifest.js")}"`)
+    .replace(
+      'src="./icons-data.js"',
+      `src="./icons-data.js?v=${await ver("icons-data.js")}"`,
+    )
+    .replace('src="./app.js"', `src="./app.js?v=${await ver("app.js")}"`);
   await writeFile(join(OUT, "index.html"), html, "utf8");
 
-  for (const f of ["style.css", "app.js"]) {
-    await copyFile(join(SRC, f), join(OUT, f));
-  }
   for (const f of FONTS) {
     await copyFile(join(DSFR, "dist", "fonts", f), join(OUT, "fonts", f));
   }
