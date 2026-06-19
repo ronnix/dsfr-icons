@@ -1,0 +1,15 @@
+{
+  "name": "dsfr-icons",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Explorateur visuel des icônes du Système de Design de l'État (DSFR) : rechercher, filtrer et copier l'identifiant fr-icon-*.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node --watch-path=src --watch-path=build.mjs build.mjs",
+    "serve": "npx --yes serve public"
+  },
+  "devDependencies": {
+    "@gouvfr/dsfr": "1.14.4"
+  }
+}

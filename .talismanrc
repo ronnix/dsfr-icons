@@ -1,0 +1,9 @@
+# Faux positifs Talisman :
+# - package-lock.json : hash d'intégrité sha512 de npm (pas des secrets)
+# - src/app.js : motifs de code (event listeners clavier), pas des secrets
+fileignoreconfig:
+  - filename: package-lock.json
+    checksum: 133bb05282765c38352c355672d5f806268089623bfcbdda50a956bcf60e5af1
+  - filename: src/app.js
+    checksum: 111486a9f699375d04d0965f23c6db955d1ccc596557de0dbbc0eb6c63abc474
+version: "1.0"
