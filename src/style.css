@@ -540,6 +540,33 @@ code {
     width: 96px;
     height: 96px;
   }
+
+  /* Header plus compact au-dessus des onglets : on récupère de la hauteur en
+     resserrant paddings/marges et le titre (le picto reste à 56px). */
+  .site-header {
+    padding-top: 0.75rem;
+  }
+  .brand {
+    gap: 0.6rem;
+  }
+  .brand h1 {
+    font-size: 1.15rem;
+    line-height: 1.2;
+  }
+  /* Sous-titre masqué : on gagne en hauteur de header, le rôle du site reste
+     clair via le titre et les onglets. */
+  .subtitle {
+    display: none;
+  }
+  .tabs {
+    margin-top: 0.6rem;
+  }
+
+  /* Compteur masqué à côté de la recherche : il fait doublon avec le badge de
+     l'onglet et tronquait le placeholder. Le champ prend toute la largeur. */
+  .count {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
