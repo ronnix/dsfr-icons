@@ -117,9 +117,24 @@ code {
   gap: 0.75rem;
 }
 .brand-mark {
-  font-size: 1.6rem;
-  color: var(--accent);
-  line-height: 1;
+  display: inline-flex;
+  line-height: 0;
+  flex-shrink: 0;
+}
+.brand-mark svg {
+  width: 46px;
+  height: 46px;
+  fill: none; /* couleurs portées par les calques fr-artwork-* */
+}
+/* Mêmes variables que les cartes pictos → adaptation au thème sombre. */
+.brand-mark .fr-artwork-decorative {
+  fill: var(--artwork-decorative);
+}
+.brand-mark .fr-artwork-minor {
+  fill: var(--artwork-minor);
+}
+.brand-mark .fr-artwork-major {
+  fill: var(--artwork-major);
 }
 .brand h1 {
   margin: 0;

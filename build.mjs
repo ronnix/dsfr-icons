@@ -17,6 +17,9 @@ const FONTS = [
   "Marianne-Bold.woff2",
 ];
 
+// Pictogramme de marque injecté dans le header (à la place du losange).
+const BRAND_PICTO = "leisure/digital-art";
+
 // Libellés FR des catégories d'icônes.
 const ICON_LABELS = {
   arrows: "Flèches",
@@ -165,7 +168,24 @@ async function main() {
   await emit("icons-data.js", "DSFR_ICONS", version, icons);
   await emit("pictograms-data.js", "DSFR_PICTOS", version, pictos);
 
-  for (const f of ["index.html", "style.css", "app.js"]) {
+  // index.html : on injecte le pictogramme de marque (préfixe d'id "brand" distinct
+  // de la grille, pour éviter toute collision quand l'onglet pictos est chargé).
+  const brandSvg = namespaceArtwork(
+    minifySvg(
+      await readFile(
+        join(DSFR, "dist", "artwork", "pictograms", BRAND_PICTO + ".svg"),
+        "utf8",
+      ),
+    ),
+    "brand",
+  );
+  const html = (await readFile(join(SRC, "index.html"), "utf8")).replace(
+    "<!--BRAND-->",
+    brandSvg,
+  );
+  await writeFile(join(OUT, "index.html"), html, "utf8");
+
+  for (const f of ["style.css", "app.js"]) {
     await copyFile(join(SRC, f), join(OUT, f));
   }
   for (const f of FONTS) {
