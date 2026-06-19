@@ -242,9 +242,21 @@ code {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
 }
+/* Champ vide → le clear est masqué : on récupère son espace à droite pour que
+   le placeholder s'affiche en entier. */
+.search:placeholder-shown {
+  padding-right: 0.9rem;
+}
 .search:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+/* Supprime la croix native WebKit (type=search) : elle ferait doublon avec
+   notre .clear-btn, qui est cross-navigateur et réinitialise l'état. */
+.search::-webkit-search-cancel-button,
+.search::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
 }
 .clear-btn {
   position: absolute;

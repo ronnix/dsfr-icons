@@ -514,6 +514,18 @@
     }
   });
 
+  // Sur pointeur tactile (sans clavier physique), le raccourci « / » n'a pas de
+  // sens : on retire le hint du placeholder.
+  if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) {
+    var searches = document.querySelectorAll(".search");
+    for (var si = 0; si < searches.length; si++) {
+      searches[si].placeholder = searches[si].placeholder.replace(
+        /\s+appuyez sur \/$/,
+        "",
+      );
+    }
+  }
+
   // Hauteur du header → décalage de la toolbar collante
   var header = document.querySelector(".site-header");
   function setHeaderH() {
